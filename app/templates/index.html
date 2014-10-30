@@ -2,7 +2,19 @@
 
 {% block content %}
 <h1>Welcome!!!</h1><br>
-<h3>Please choose from available lists</h3>
+<h3>Create new list</h3>
+<form action="" method="post" name="add_playlist">
+    {{ form.hidden_tag() }}
+    <p>
+        Playlist name<br>
+        {{ form.id(size=20) }} <br>
+        {% for error in form.id.errors %}<span style="color: red">{{ error }}</span><br>{% endfor %}
+        Password (you will be giving this to people who can manage the list)<br>
+        {{ form.password(size=20) }} <br>
+        <input type="submit" value="create" />
+    </p>
+</form>
+<h3>Or choose from available lists</h3>
 <table>
     {% for playlist in playlists %}
         <tr>

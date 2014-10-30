@@ -4,7 +4,7 @@
 <title>{% if not video.data %}{{ playlist.id }}{% else %}{{ video.data.title }}{% endif %} | SEALMix</title>
 {% endblock %}
 {% block content %}
-<h1>Playlist: {{ playlist.id }}</h1>
+<h1><a href="{{ url_for('index') }}">SEALMix</a> - Playlist: <a href="{{ url_for('play', playlist_id=playlist.id) }}">{{ playlist.id }}</a></h1>
 <h2>Now playing: {% if video %}{{ video.data.title }}{% else %}(no video){% endif %}</h2>
 <div id="player"></div>
 

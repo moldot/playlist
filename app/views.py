@@ -9,11 +9,18 @@ import random
 def before_request():
     g.playlist = current_user
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
+    createPlaylistForm = FormCreatePlaylist()
+    if createPlaylistForm.validate_on_submit():
+        new_playlist = models.Playlist(id=createPlaylistForm.id.data, password=createPlaylistForm.password.data)
+        db.session.add(new_playlist)
+        db.session.commit()
+        flash('Playlist ' + str(new_playlist.id) + 'successfully created')
+        return redirect(url_for('play', playlist_id=new_playlist.id))
     playlists = models.Playlist.query.all()
-    return render_template('index.html', playlists=playlists)
+    return render_template('index.html', playlists=playlists, form=createPlaylistForm)
 
 @app.route('/play/<playlist_id>', methods=['GET', 'POST'])
 @app.route('/play/<playlist_id>/<ytid>', methods=['GET', 'POST'])
@@ -23,7 +30,7 @@ def play(playlist_id, ytid=None):
         flash('Playlist ' + str(playlist_id) + ' does not exist')
         return redirect(url_for('index'))
 
-    videos = models.Video.query.filter_by(playlist_id=playlist_id).all()
+    videos = models.Video.query.filter_by(playlist_id=playlist_id).order_by(models.Video.date_added.desc()).all()
     if ytid is None:
         if len(videos) > 0:
             video = random.choice(videos)
