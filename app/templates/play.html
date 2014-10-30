@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>{% if not video.data %}{{ playlist.id }}{% else %}{{ video.data.title }}{% endif %} | SEALMix</title>
+{% endblock %}
+{% block content %}
+<h1>Playlist: {{ playlist.id }}</h1>
+<h2>Now playing: {{ video.data.title }}</h2>
+<div id="player"></div>
+
+<script>
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: '{{ video.ytid }}',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    var done = false;
+    function onPlayerStateChange(event) {
+        if(event.data == 0) {
+            window.location.replace("{{ url_for('play', playlist_id=playlist.id) }}");
+        }
+    }
+    
+    function stopVideo() {
+        player.stopVideo();
+    }
+</script>
+
+<form action="" method="post" name="add_video">
+    {{ form.hidden_tag() }}
+    <p>
+        Add YouTube URL to playlist: {{ form.url(size=60) }} 
+        <input type="submit" value="add" />
+        {% for error in form.url.errors %}
+            <br><span style="color: red">{{ error }}</span>
+        {% endfor %}
+        <br>
+    </p>
+</form>
+
+<table>
+    {% for v in videos %}
+        <tr>
+            <td><a href="/play/{{ playlist.id }}/{{ v.ytid }}">{{ v.data.title }}</a></td>
+            <td><a href="{{ url_for('remove_video', playlist_id=playlist.id, ytid=v.ytid) }}">Remove</a></td>
+        </tr>
+    {% endfor %}
+</table>
+                
+{% endblock %}

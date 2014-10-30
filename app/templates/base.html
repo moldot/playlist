@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }} </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </body>
+    <br><br><br><br>
+    <footer>
+        <pre>
+&copy;2014 Varot Premtoon
+Report Problem: varot@mit.edu
+        </pre>
+    </footer>
+</html>
