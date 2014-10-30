@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <h1>Playlist: {{ playlist.id }}</h1>
-<h2>Now playing: {{ video.data.title }}</h2>
+<h2>Now playing: {% if video %} video.data.title }}{% else %}(no video){% endif %}</h2>
 <div id="player"></div>
 
 <script>
