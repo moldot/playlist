@@ -5,6 +5,7 @@
 {% endblock %}
 {% block content %}
 <h1><a href="{{ url_for('index') }}">SEALMix</a> - Playlist: <a href="{{ url_for('play', playlist_id=playlist.id) }}">{{ playlist.id }}</a></h1>
+Copy this URL to share your playlist - {{ url_for('play', playlist_id=playlist.id, _external=True) }}
 <h2>Now playing: {% if video %}{{ video.data.title }}{% else %}(no video){% endif %}</h2>
 <div id="player"></div>
 
